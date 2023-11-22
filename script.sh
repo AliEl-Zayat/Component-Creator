@@ -1,10 +1,24 @@
 #!/bin/bash
 
-defaultOutputPath="/Users/aliel-zayat/Desktop/Development/PROJECTS/SIDED/DigimileWebApp/src/components" # Set your default output path here
+defaultOutputPath="" # Set your default output path here
 
 # Ask for the output path if the default isn't provided in the script
 if [ -z "$defaultOutputPath" ]; then
     read -p "Enter the default output path: " defaultOutputPath
+fi
+
+if [ -z "$defaultOutputPath" ]; then
+    echo "Please provide a default output path."
+    exit 1
+fi
+
+# Ask if user wants to use TypeScript
+read -p "Using TypeScript? (Yes/No): " useTypescript
+
+if [[ "$useTypescript" =~ ^[Yy](es)?$ ]]; then
+    fileExtensions="ts, tsx"
+else
+    fileExtensions="js, jsx"
 fi
 
 while true; do
@@ -36,25 +50,25 @@ while true; do
         # Create folder and files
         folderPath="$outputPath/$componentName"
         mkdir -p "$folderPath"
-        touch "$folderPath/$componentName.tsx"
+        touch "$folderPath/$componentName.${fileExtensions%,*}"
         touch "$folderPath/$componentName.module.scss"
         touch "$folderPath/index.ts"
 
-        # Write content to componentName.tsx
-        echo "import React from 'react';" > "$folderPath/$componentName.tsx"
-        echo "import Styles from './$componentName.module.scss';" >> "$folderPath/$componentName.tsx"
-        echo "" >> "$folderPath/$componentName.tsx"
-        echo "const $componentName = () => {" >> "$folderPath/$componentName.tsx"
-        echo "  return <></>;" >> "$folderPath/$componentName.tsx"
-        echo "};" >> "$folderPath/$componentName.tsx"
-        echo "" >> "$folderPath/$componentName.tsx"
-        echo "export default $componentName;" >> "$folderPath/$componentName.tsx"
+        # Write content to componentName file
+        echo "import React from 'react';" > "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "import Styles from './$componentName.module.scss';" >> "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "" >> "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "const $componentName = () => {" >> "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "  return <></>;" >> "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "};" >> "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "" >> "$folderPath/$componentName.${fileExtensions%,*}"
+        echo "export default $componentName;" >> "$folderPath/$componentName.${fileExtensions%,*}"
 
         # Write content to index.ts
         echo "export { default } from './$componentName';" > "$folderPath/index.ts"
 
         echo "Folder structure created for $componentName in $folderPath:"
-        echo "- $folderPath/$componentName.tsx"
+        echo "- $folderPath/$componentName.${fileExtensions%,*}"
         echo "- $folderPath/$componentName.module.scss"
         echo "- $folderPath/index.ts"
     fi
